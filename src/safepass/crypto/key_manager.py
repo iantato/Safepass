@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from safepass.config.settings import ITERATIONS, KEY_LENGTH
 
-class MasterKey:
+class KeyManager:
 
     def __init__(self, master_password: str, username: str):
         self._key: Optional[bytes] = None
