@@ -3,6 +3,7 @@ from typing import Optional
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from safepass.storage.key_storage import KeyStorage
 from safepass.config.settings import ITERATIONS, KEY_LENGTH
 
 class KeyManager:
@@ -10,7 +11,7 @@ class KeyManager:
     def __init__(self, master_password: str, username: str, user_exists: bool = False):
         self._key: Optional[bytes] = None
         self._symmetric_key: Optional[bytes] = None
-        self._encrypt_symmetric_key: Optional[bytes] = None
+        self._encrypted_symmetric_key: Optional[bytes] = None
         self._nonce : Optional[bytes] = None
         if not user_exists:
             self._initialize(master_password, username)
@@ -27,9 +28,9 @@ class KeyManager:
         return self._key
 
     def get_encrypted_key(self) -> bytes:
-        if not self._encrypt_symmetric_key:
+        if not self._encrypted_symmetric_key:
             raise ValueError("Encrypted symmetric key is not set.")
-        return self._encrypt_symmetric_key
+        return self._encrypted_symmetric_key
 
     def get_nonce(self) -> bytes:
         if not self._nonce:
@@ -48,7 +49,7 @@ class KeyManager:
 
     def _encrypt_symmetric_key(self, symmetric_key: bytes, nonce: bytes) -> bytes:
         aesgcm = AESGCM(self._key)
-        self._encrypt_symmetric_key = aesgcm.encrypt(nonce, symmetric_key, None)
+        self._encrypted_symmetric_key = aesgcm.encrypt(nonce, symmetric_key, None)
 
     def decrypt_symmetric_key(self, encrypted_key: bytes, nonce: bytes) -> bytes:
         if not self._key:
@@ -63,5 +64,5 @@ class KeyManager:
     def destroy(self) -> None:
         self._key = None
         self._symmetric_key = None
-        self._encrypt_symmetric_key = None
+        self._encrypted_symmetric_key = None
         self._nonce = None

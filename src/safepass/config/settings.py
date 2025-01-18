@@ -3,7 +3,6 @@ from pathlib import Path
 # Base settings.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 DATA_DIR = BASE_DIR / 'data'
-KEYS_DIR = DATA_DIR / 'keys'
 
 # Database settings.
 DB_NAME = 'vault.db'
