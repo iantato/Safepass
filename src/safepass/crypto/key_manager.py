@@ -15,6 +15,15 @@ class KeyManager:
         self._nonce : Optional[bytes] = None
         if not user_exists:
             self._initialize(master_password, username)
+        else:
+            _account = KeyStorage().get_account_data(username)
+            self._key = self._derive_key(master_password.encode('utf-8'),
+                                         username.encode('utf-8'))
+            self._encrypt_symmetric_key = _account._encrypted_key
+            self._nonce = _account._nonce
+            self._symmetric_key = self.decrypt_symmetric_key(self._key,
+                                                             _account._encrypted_key,
+                                                             _account._nonce)
 
     def _initialize(self, master_password: str, username: str) -> None:
         self._key = self._derive_key(master_password.encode('utf-8'), username.encode('utf-8'))
@@ -51,11 +60,11 @@ class KeyManager:
         aesgcm = AESGCM(self._key)
         self._encrypted_symmetric_key = aesgcm.encrypt(nonce, symmetric_key, None)
 
-    def decrypt_symmetric_key(self, encrypted_key: bytes, nonce: bytes) -> bytes:
+    def decrypt_symmetric_key(self, master_key: bytes, encrypted_key: bytes, nonce: bytes) -> bytes:
         if not self._key:
             raise ValueError("Master key is not set.")
 
-        aesgcm = AESGCM(self._key)
+        aesgcm = AESGCM(master_key)
         try:
             return aesgcm.decrypt(nonce, encrypted_key, None)
         except Exception as e:

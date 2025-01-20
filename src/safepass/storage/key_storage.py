@@ -30,7 +30,7 @@ class KeyStorage:
             ''', (username, encrypted_key, nonce))
             conn.commit()
 
-    def get_keys(self, username: str) -> Account:
+    def get_account_data(self, username: str) -> Account:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute('''
