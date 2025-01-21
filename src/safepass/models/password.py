@@ -3,7 +3,8 @@ from typing import Optional
 
 @dataclass
 class PasswordEntry:
-    email: str
-    username: Optional[str] = None
+    owner_username: str = None
     website: str
+    email: str
     password: bytes
+    website_username: Optional[str] = None
