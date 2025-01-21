@@ -25,6 +25,9 @@ class KeyManager:
                                                              _account._encrypted_key,
                                                              _account._nonce)
 
+        # Clear master password from memory.
+        master_password = None
+
     def _initialize(self, master_password: str, username: str) -> None:
         self._key = self._derive_key(master_password.encode('utf-8'), username.encode('utf-8'))
         self._symmetric_key = os.urandom(32)
