@@ -8,14 +8,14 @@ from safepass.config.settings import ITERATIONS, KEY_LENGTH
 
 class KeyManager:
 
-    def __init__(self, master_password: str, username: str, user_exists: bool = False):
+    def __init__(self, master_password: str, username: str):
         self.database = KeyStorage()
 
         self._key: Optional[bytes] = None
         self._symmetric_key: Optional[bytes] = None
         self._symmetric_key_nonce: Optional[bytes] = None
         self._encrypted_symmetric_key: Optional[bytes] = None
-        if not user_exists:
+        if not self.database.get_account_data(username):
             self._initialize(master_password, username)
         else:
             _account = self.database.get_account_data(username)
@@ -87,14 +87,14 @@ class KeyManager:
         _nonce = os.urandom(12)
 
         aesgcm = AESGCM(self._symmetric_key)
-        return aesgcm.encrypt(_nonce, data, None), _nonce
+        return aesgcm.encrypt(_nonce, data, b''), _nonce
 
     def decrypt_data(self, data: bytes, nonce: bytes) -> str:
         if not self._symmetric_key:
             raise ValueError("Symmetric key is not set.")
 
         aesgcm = AESGCM(self._symmetric_key)
-        return aesgcm.decrypt(nonce, data, None).decode('utf-8')
+        return aesgcm.decrypt(nonce, data, b'')
 
     def destroy(self) -> None:
         self._key = None

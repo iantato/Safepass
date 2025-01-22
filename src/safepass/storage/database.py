@@ -19,9 +19,9 @@ def initialize_database() -> None:
             CREATE TABLE IF NOT EXISTS passwords (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 owner_username TEXT NOT NULL,
-                website_username TEXT NOT NULL,
-                website_name TEXT NOT NULL,
                 website_url TEXT NOT NULL,
+                website_name TEXT NOT NULL,
+                website_username TEXT NOT NULL,
                 email TEXT NOT NULL,
                 nonce BLOB NOT NULL,
                 encrypted_password BLOB NOT NULL,

@@ -12,7 +12,7 @@ class VaultManager:
                      email: str, password: str) -> None:
         _encrypted_password, nonce = self.key_manager.encrypt_data(password.encode('utf-8'))
 
-        self.vault_storage.save_password_entry(
+        self.database.save_password_entry(
             owner_username,
             website_url,
             website_name,
@@ -23,7 +23,7 @@ class VaultManager:
         )
 
     def get_password(self, owner_username: str, website_name: str, email: str) -> str:
-        entry = self.vault_storage.get_password_data(
+        entry = self.database.get_password_data(
             owner_username,
             website_name,
             email)

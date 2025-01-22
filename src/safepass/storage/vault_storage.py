@@ -16,9 +16,11 @@ class VaultStorage:
             cursor = conn.cursor()
 
             cursor.execute('''
-                INSERT INTO passwords (owner_username, website_username, website_name, website_url, email, nonce, encrypted_password)
+                INSERT INTO passwords (owner_username, website_url, website_name, website_username, email, nonce, encrypted_password)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (owner_username, website_username, website_name, website_url, email, nonce, password))
+            ''', (owner_username, website_url, website_name, website_username, email, nonce, password))
+
+            conn.commit()
 
     def get_password_data(self, owner_username: str, website_name: str, email: str) -> PasswordEntry:
         with sqlite3.connect(DB_PATH) as conn:
