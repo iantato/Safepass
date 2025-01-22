@@ -11,16 +11,16 @@ class VaultStorage:
             initialize_database()
 
     def save_password_entry(self, owner_username: str, website_url: str, website_name: str,
-                            website_username: str, email: str, password: bytes) -> None:
+                            website_username: str, email: str, nonce: bytes, password: bytes) -> None:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
 
             cursor.execute('''
-                INSERT INTO passwords (owner_username, website_username, website_name, website_url, email, encrypted_password)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (owner_username, website_username, website_name, website_url, email, password))
+                INSERT INTO passwords (owner_username, website_username, website_name, website_url, email, nonce, encrypted_password)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (owner_username, website_username, website_name, website_url, email, nonce, password))
 
-    def get_password_data(self, owner_username: str, website_name: str, email: str) -> None:
+    def get_password_data(self, owner_username: str, website_name: str, email: str) -> PasswordEntry:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
 

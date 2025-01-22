@@ -23,6 +23,7 @@ def initialize_database() -> None:
                 website_name TEXT NOT NULL,
                 website_url TEXT NOT NULL,
                 email TEXT NOT NULL,
+                nonce BLOB NOT NULL,
                 encrypted_password BLOB NOT NULL,
                 FOREIGN KEY (owner_username) REFERENCES keys (username)
             );

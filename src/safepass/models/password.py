@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Optional
 
 @dataclass
 class PasswordEntry:
-    owner_username: str = None
-    website: str
+    owner_username: str
+    website_url: str
+    website_name: str
+    website_username: str
     email: str
+    nonce: bytes
     password: bytes
-    website_username: Optional[str] = None
