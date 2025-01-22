@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Base settings.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -15,3 +16,7 @@ ITERATIONS = dict({
 })
 KEY_LENGTH = 32
 VERSION = 1
+
+# Session settings.
+SESSION_TIMEOUT = timedelta(minutes=30)
+SESSION_CHECK_INTERVAL = timedelta(minutes=5)
