@@ -37,6 +37,17 @@ class VaultStorage:
             cursor.execute(update_query, list(updates.values()) + [owner_username, email])
             conn.commit()
 
+    def delete_password(self, owner_username: str, website_name: str, email: str) -> None:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute('''
+                DELETE FROM passwords
+                WHERE owner_username = ? AND website_name = ? AND email = ?
+            ''', (owner_username, website_name, email))
+
+            conn.commit()
+
     def get_password_data(self, owner_username: str, website_name: str, email: str) -> PasswordEntry:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()

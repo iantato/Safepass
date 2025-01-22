@@ -37,6 +37,8 @@ class VaultManager:
 
         self.database.update_password_entry(owner_username, email, **validated_fields)
 
+    def delete_password(self, owner_username: str, website_name: str, email: str) -> None:
+        self.database.delete_password(owner_username, website_name, email)
 
     def get_password(self, owner_username: str, website_name: str, email: str) -> str:
         entry = self.database.get_password_data(
