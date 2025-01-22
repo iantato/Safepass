@@ -15,6 +15,7 @@ class KeyManager:
         self._symmetric_key: Optional[bytes] = None
         self._symmetric_key_nonce: Optional[bytes] = None
         self._encrypted_symmetric_key: Optional[bytes] = None
+
         if not self.database.get_account_data(username):
             self._initialize(master_password, username)
         else:
