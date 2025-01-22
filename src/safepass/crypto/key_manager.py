@@ -87,14 +87,14 @@ class KeyManager:
         _nonce = os.urandom(12)
 
         aesgcm = AESGCM(self._symmetric_key)
-        return aesgcm.encrypt(_nonce, data, b''), _nonce
+        return aesgcm.encrypt(_nonce, data, None), _nonce
 
     def decrypt_data(self, data: bytes, nonce: bytes) -> str:
         if not self._symmetric_key:
             raise ValueError("Symmetric key is not set.")
 
         aesgcm = AESGCM(self._symmetric_key)
-        return aesgcm.decrypt(nonce, data, b'')
+        return aesgcm.decrypt(nonce, data, None).decode('utf-8')
 
     def destroy(self) -> None:
         self._key = None
