@@ -22,6 +22,21 @@ class VaultStorage:
 
             conn.commit()
 
+    def update_password_entry(self, owner_username: str, email: str, **updates) -> None:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+
+            update_query = 'UPDATE passwords SET '
+
+            for key, value in updates.items():
+                update_query += f'{key} = ?, '
+
+            update_query = update_query[:-2]
+            update_query += ' WHERE owner_username = ? AND email = ?'
+
+            cursor.execute(update_query, list(updates.values()) + [owner_username, email])
+            conn.commit()
+
     def get_password_data(self, owner_username: str, website_name: str, email: str) -> PasswordEntry:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()

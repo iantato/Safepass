@@ -1,3 +1,5 @@
+from dataclasses import fields
+from safepass.models.password import PasswordEntry
 from safepass.crypto.key_manager import KeyManager
 from safepass.storage.vault_storage import VaultStorage
 
@@ -22,6 +24,20 @@ class VaultManager:
             _encrypted_password
         )
 
+    def update_password_entry(self, owner_username: str, email: str, **updates) -> None:
+        if 'password' in updates:
+            _encrypted_password, _nonce = self.key_manager.encrypt_data(
+               updates['password'].encode('utf-8')
+            )
+            updates['password'] = _encrypted_password
+            updates['nonce'] = _nonce
+
+        validated_fields = {key: val for key, val in updates.items()
+                            if key in [field.name for field in fields(PasswordEntry)]}
+
+        self.database.update_password_entry(owner_username, email, **validated_fields)
+
+
     def get_password(self, owner_username: str, website_name: str, email: str) -> str:
         entry = self.database.get_password_data(
             owner_username,
@@ -32,6 +48,7 @@ class VaultManager:
             raise ValueError("Password not found.")
 
         return self.key_manager.decrypt_data(entry.password, entry.nonce).decode('utf-8')
+
 
     def destroy(self) -> None:
         self.database = None
