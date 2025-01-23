@@ -41,6 +41,7 @@ class KeyManager:
         with self._temp_key(username, master_password) as _master_key:
             self._symmetric_key = os.urandom(32)
             self._symmetric_key_nonce = os.urandom(12)
+
             self.database.save_account(
                 username,
                 self._encrypt_symmetric_key(_master_key, self._symmetric_key, self._symmetric_key_nonce),
@@ -75,15 +76,15 @@ class KeyManager:
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=KEY_LENGTH,
-            salt=username.decode('utf-8'),
+            salt=username.encode('utf-8'),
             iterations=ITERATIONS['SHA256']
         )
 
-        return kdf.derive(master_password.decode('utf-8'))
+        return kdf.derive(master_password.encode('utf-8'))
 
     def _encrypt_symmetric_key(self, master_key: bytes, symmetric_key: bytes, nonce: bytes) -> bytes:
         aesgcm = AESGCM(master_key)
-        self._encrypted_symmetric_key = aesgcm.encrypt(nonce, symmetric_key, None)
+        return aesgcm.encrypt(nonce, symmetric_key, None)
 
     def _decrypt_symmetric_key(self, master_key: bytes, symmetric_key: bytes, nonce: bytes) -> bytes:
         aesgcm = AESGCM(master_key)

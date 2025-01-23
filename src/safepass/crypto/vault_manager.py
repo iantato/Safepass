@@ -1,5 +1,5 @@
 from dataclasses import fields
-from safepass.session import SessionManager
+from safepass.session.session_manager import SessionManager
 from safepass.models.password import PasswordEntry
 from safepass.storage.vault_storage import VaultStorage
 
