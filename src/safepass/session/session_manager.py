@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 from threading import Thread, Event
-from safepass.crypto.key_manager import KeyManager
+from safepass.core.key_manager import KeyManager
 from safepass.config.settings import SESSION_TIMEOUT
 
 class SessionManager:
